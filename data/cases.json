@@ -465,7 +465,7 @@
   {
     "case_id": "DSA-2026-00007",
     "case_type": "dsa_application",
-    "status": "awaiting_evidence",
+    "status": "evidence_received",
     "applicant": {
       "name": "fouad k",
       "forenames": "fouad",
@@ -484,7 +484,7 @@
     },
     "assigned_to": "mbrown",
     "created_date": "2026-04-16T13:13:52.496Z",
-    "last_updated": "2026-04-21T09:43:11.214Z",
+    "last_updated": "2026-04-22T13:29:56.597Z",
     "timeline": [
       {
         "date": "2026-04-16T13:13:52.496Z",
@@ -566,6 +566,11 @@
         "date": "2026-04-21T09:43:11.214Z",
         "event": "state_transition",
         "note": "Applicant viewed evidence request — status updated to Awaiting evidence."
+      },
+      {
+        "date": "2026-04-22T13:29:56.597Z",
+        "event": "evidence_received",
+        "note": "Evidence uploaded by applicant: COuncil Tax/ Proof of Address. Files: Council tax.pdf"
       }
     ],
     "case_notes": "",
@@ -764,6 +769,73 @@
             "label": "Postcode",
             "value": "G411PJ",
             "confidence": "low"
+          }
+        ]
+      },
+      {
+        "submitted_at": "2026-04-22T13:29:56.597Z",
+        "description": "COuncil Tax/ Proof of Address",
+        "files": [
+          {
+            "name": "Council tax.pdf",
+            "size": 21031,
+            "type": "application/pdf"
+          }
+        ],
+        "extracted_fields": [
+          {
+            "key": "document_type",
+            "label": "Document type",
+            "value": "Council tax",
+            "confidence": "high"
+          },
+          {
+            "key": "document_date",
+            "label": "Document date",
+            "value": "10/03/2025",
+            "confidence": "high"
+          },
+          {
+            "key": "issuing_body",
+            "label": "Issuing organisation",
+            "value": "Glasgow City Council",
+            "confidence": "high"
+          },
+          {
+            "key": "person_name",
+            "label": "Name on document",
+            "value": "Emma Roberts",
+            "confidence": "high"
+          },
+          {
+            "key": "address_line1",
+            "label": "Address line 1",
+            "value": "100 Place Avenue",
+            "confidence": "high"
+          },
+          {
+            "key": "postcode",
+            "label": "Postcode",
+            "value": "NW2 7EB",
+            "confidence": "high"
+          },
+          {
+            "key": "amount",
+            "label": "Amount (£)",
+            "value": "£3200",
+            "confidence": "high"
+          },
+          {
+            "key": "vat",
+            "label": "VAT",
+            "value": "£2000",
+            "confidence": "medium"
+          },
+          {
+            "key": "total",
+            "label": "Total (inc. VAT)",
+            "value": "£3200",
+            "confidence": "high"
           }
         ]
       }
@@ -979,7 +1051,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-04-21T09:48:37.214Z",
-    "last_updated": "2026-04-21T09:53:49.190Z",
+    "last_updated": "2026-05-08T10:48:34.290Z",
     "timeline": [
       {
         "date": "2026-04-21T09:48:37.214Z",
@@ -990,6 +1062,38 @@
         "date": "2026-04-21T09:53:49.190Z",
         "event": "evidence_received",
         "note": "Evidence uploaded by applicant: council tax. Files: Council tax.pdf"
+      },
+      {
+        "date": "2026-04-22T13:32:11.035Z",
+        "event": "evidence_requested",
+        "note": "can you send xxx evidence",
+        "actor": "jsmith"
+      },
+      {
+        "date": "2026-04-22T13:32:54.348Z",
+        "event": "state_transition",
+        "note": "Applicant viewed evidence request — status updated to Awaiting evidence."
+      },
+      {
+        "date": "2026-05-08T10:40:25.977Z",
+        "event": "evidence_received",
+        "note": "Evidence uploaded by applicant: council tax. Files: Council tax.pdf"
+      },
+      {
+        "date": "2026-05-08T10:41:56.934Z",
+        "event": "evidence_requested",
+        "note": "can you send sponsor evidence",
+        "actor": "jsmith"
+      },
+      {
+        "date": "2026-05-08T10:42:33.548Z",
+        "event": "state_transition",
+        "note": "Applicant viewed evidence request — status updated to Awaiting evidence."
+      },
+      {
+        "date": "2026-05-08T10:48:34.290Z",
+        "event": "evidence_received",
+        "note": "Evidence uploaded by applicant: Invoice. Files: invoice_MF20259633.pdf"
       }
     ],
     "case_notes": "",
@@ -1073,8 +1177,155 @@
             "confidence": "high"
           }
         ]
+      },
+      {
+        "submitted_at": "2026-05-08T10:40:25.977Z",
+        "description": "council tax",
+        "files": [
+          {
+            "name": "Council tax.pdf",
+            "size": 21031,
+            "type": "application/pdf"
+          }
+        ],
+        "extracted_fields": [
+          {
+            "key": "document_type",
+            "label": "Document type",
+            "value": "Council tax",
+            "confidence": "high"
+          },
+          {
+            "key": "document_date",
+            "label": "Document date",
+            "value": "10/03/2025",
+            "confidence": "high"
+          },
+          {
+            "key": "issuing_body",
+            "label": "Issuing organisation",
+            "value": "Glasgow City Council",
+            "confidence": "high"
+          },
+          {
+            "key": "person_name",
+            "label": "Name on document",
+            "value": "Emma Roberts",
+            "confidence": "high"
+          },
+          {
+            "key": "address_line1",
+            "label": "Address line 1",
+            "value": "100 Place Avenue",
+            "confidence": "high"
+          },
+          {
+            "key": "postcode",
+            "label": "Postcode",
+            "value": "NW2 7EB",
+            "confidence": "high"
+          },
+          {
+            "key": "amount",
+            "label": "Amount (£)",
+            "value": "£3200",
+            "confidence": "high"
+          },
+          {
+            "key": "vat",
+            "label": "VAT",
+            "value": "0",
+            "confidence": "medium"
+          },
+          {
+            "key": "total",
+            "label": "Total (inc. VAT)",
+            "value": "£3200",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "submitted_at": "2026-05-08T10:48:34.290Z",
+        "description": "Invoice",
+        "files": [
+          {
+            "name": "invoice_MF20259633.pdf",
+            "size": 55862,
+            "type": "application/pdf"
+          }
+        ],
+        "extracted_fields": [
+          {
+            "key": "document_type",
+            "label": "Document type",
+            "value": "Invoice",
+            "confidence": "high"
+          },
+          {
+            "key": "document_date",
+            "label": "Invoice date",
+            "value": "12 March 2026",
+            "confidence": "low"
+          },
+          {
+            "key": "issuing_body",
+            "label": "Supplier name",
+            "value": "MacFire Ltd",
+            "confidence": "high"
+          },
+          {
+            "key": "reference_number",
+            "label": "Invoice number",
+            "value": "1315",
+            "confidence": "high"
+          },
+          {
+            "key": "item_description",
+            "label": "Item / service description",
+            "value": "Fire Alarm Test",
+            "confidence": "low"
+          },
+          {
+            "key": "amount",
+            "label": "Amount (exc. VAT) £",
+            "value": "£225.00",
+            "confidence": "high"
+          },
+          {
+            "key": "vat",
+            "label": "VAT £",
+            "value": "",
+            "confidence": "low"
+          },
+          {
+            "key": "total",
+            "label": "Total (inc. VAT) £",
+            "value": "£270.00",
+            "confidence": "high"
+          },
+          {
+            "key": "postcode",
+            "label": "Postcode",
+            "value": "PA2 7LA",
+            "confidence": "high"
+          },
+          {
+            "key": "sort_code",
+            "label": "Sort code",
+            "value": "80 22 60",
+            "confidence": "high"
+          },
+          {
+            "key": "account_number",
+            "label": "Account number",
+            "value": "06410892",
+            "confidence": "high"
+          }
+        ]
       }
-    ]
+    ],
+    "evidence_requested_date": "2026-05-08T10:41:56.934Z"
   },
   {
     "case_id": "DSA-2026-00011",
@@ -1207,5 +1458,232 @@
       }
     ],
     "decision_reason": "no more infor needed"
+  },
+  {
+    "case_id": "DSA-2026-00012",
+    "case_type": "dsa_application",
+    "status": "evidence_received",
+    "applicant": {
+      "name": "Joe Something",
+      "forenames": "Joe",
+      "surname": "Something",
+      "reference": "9999999999",
+      "date_of_birth": "1980-11-11",
+      "sex": "male",
+      "address": {
+        "line1": "10 CLyde Place",
+        "postcode": "G58DF"
+      },
+      "university": "University of Glasgow",
+      "course": "PG Biomedical",
+      "notification_channel": "email",
+      "email": "sarguroh@hotmail.com"
+    },
+    "assigned_to": "jsmith",
+    "created_date": "2026-05-18T13:18:42.606Z",
+    "last_updated": "2026-05-18T13:26:55.062Z",
+    "timeline": [
+      {
+        "date": "2026-05-18T13:18:42.606Z",
+        "event": "case_created",
+        "note": "Application submitted by applicant"
+      },
+      {
+        "date": "2026-05-18T13:23:13.129Z",
+        "event": "evidence_received",
+        "note": "Evidence uploaded by applicant: council tax. Files: Council tax.pdf"
+      },
+      {
+        "date": "2026-05-18T13:24:33.711Z",
+        "event": "state_transition",
+        "note": "can you check the evidences if its good",
+        "actor": "jsmith"
+      },
+      {
+        "date": "2026-05-18T13:25:00.948Z",
+        "event": "evidence_requested",
+        "note": "please send the invoices",
+        "actor": "jsmith"
+      },
+      {
+        "date": "2026-05-18T13:25:33.453Z",
+        "event": "state_transition",
+        "note": "Applicant viewed evidence request — status updated to Awaiting evidence."
+      },
+      {
+        "date": "2026-05-18T13:26:55.062Z",
+        "event": "evidence_received",
+        "note": "Evidence uploaded by applicant: invoice. Files: invoice_MF20259633.pdf"
+      }
+    ],
+    "case_notes": "",
+    "application_data": {
+      "cost_items": [
+        {
+          "id": "cost-1",
+          "description": "Mobility Car Insurance",
+          "amount": 2000,
+          "supplier": "MobiCar Care"
+        },
+        {
+          "id": "cost-4",
+          "description": "Mobility Home Insurance",
+          "amount": 1500,
+          "supplier": "MobiHome Care"
+        }
+      ],
+      "total_amount": 3500,
+      "declaration_confirmed": true,
+      "submitted_at": "2026-05-18T13:18:42.606Z"
+    },
+    "evidence_submissions": [
+      {
+        "submitted_at": "2026-05-18T13:23:13.129Z",
+        "description": "council tax",
+        "files": [
+          {
+            "name": "Council tax.pdf",
+            "size": 21031,
+            "type": "application/pdf"
+          }
+        ],
+        "extracted_fields": [
+          {
+            "key": "document_type",
+            "label": "Document type",
+            "value": "Council tax",
+            "confidence": "high"
+          },
+          {
+            "key": "document_date",
+            "label": "Document date",
+            "value": "10/03/2025",
+            "confidence": "high"
+          },
+          {
+            "key": "issuing_body",
+            "label": "Issuing organisation",
+            "value": "Glasgow City Council",
+            "confidence": "high"
+          },
+          {
+            "key": "person_name",
+            "label": "Name on document",
+            "value": "Emma Roberts",
+            "confidence": "high"
+          },
+          {
+            "key": "address_line1",
+            "label": "Address line 1",
+            "value": "100 Place Avenue",
+            "confidence": "high"
+          },
+          {
+            "key": "postcode",
+            "label": "Postcode",
+            "value": "NW2 7EB",
+            "confidence": "high"
+          },
+          {
+            "key": "amount",
+            "label": "Amount (£)",
+            "value": "£3200",
+            "confidence": "high"
+          },
+          {
+            "key": "vat",
+            "label": "VAT",
+            "value": "£2000",
+            "confidence": "medium"
+          },
+          {
+            "key": "total",
+            "label": "Total (inc. VAT)",
+            "value": "£3200",
+            "confidence": "high"
+          }
+        ]
+      },
+      {
+        "submitted_at": "2026-05-18T13:26:55.062Z",
+        "description": "invoice",
+        "files": [
+          {
+            "name": "invoice_MF20259633.pdf",
+            "size": 55862,
+            "type": "application/pdf"
+          }
+        ],
+        "extracted_fields": [
+          {
+            "key": "document_type",
+            "label": "Document type",
+            "value": "Invoice",
+            "confidence": "high"
+          },
+          {
+            "key": "document_date",
+            "label": "Invoice date",
+            "value": "19/08/2025",
+            "confidence": "low"
+          },
+          {
+            "key": "issuing_body",
+            "label": "Supplier name",
+            "value": "MacFire Ltd",
+            "confidence": "high"
+          },
+          {
+            "key": "reference_number",
+            "label": "Invoice number",
+            "value": "1315",
+            "confidence": "high"
+          },
+          {
+            "key": "item_description",
+            "label": "Item / service description",
+            "value": "Fire Exit",
+            "confidence": "low"
+          },
+          {
+            "key": "amount",
+            "label": "Amount (exc. VAT) £",
+            "value": "£225.00",
+            "confidence": "high"
+          },
+          {
+            "key": "vat",
+            "label": "VAT £",
+            "value": "",
+            "confidence": "low"
+          },
+          {
+            "key": "total",
+            "label": "Total (inc. VAT) £",
+            "value": "£270.00",
+            "confidence": "high"
+          },
+          {
+            "key": "postcode",
+            "label": "Postcode",
+            "value": "PA2 7LA",
+            "confidence": "high"
+          },
+          {
+            "key": "sort_code",
+            "label": "Sort code",
+            "value": "80 22 60",
+            "confidence": "high"
+          },
+          {
+            "key": "account_number",
+            "label": "Account number",
+            "value": "06410892",
+            "confidence": "high"
+          }
+        ]
+      }
+    ],
+    "evidence_requested_date": "2026-05-18T13:25:00.948Z"
   }
 ]

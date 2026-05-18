@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFormContext } from "@/lib/form-context";
 import { validateRequired, ValidationError } from "@/lib/validation";
 import AiAssistPanel from "@/components/AiAssistPanel";
+import { UK_UNIVERSITIES } from "@/lib/uk-universities";
 
 export default function UniversityPage() {
   const router = useRouter();
@@ -89,11 +90,14 @@ export default function UniversityPage() {
         <AiAssistPanel page="university" />
 
         <form onSubmit={handleSubmit} noValidate>
-          {/* University name */}
+          {/* University name — autocomplete with datalist */}
           <div className={`govuk-form-group${universityNameError ? " govuk-form-group--error" : ""}`}>
             <label className="govuk-label" htmlFor="universityName">
               University name
             </label>
+            <div className="govuk-hint" id="universityName-hint">
+              Start typing to search for your university. If your university is not listed, type the full name.
+            </div>
             {universityNameError && (
               <p id="universityName-error" className="govuk-error-message">
                 <span className="govuk-visually-hidden">Error:</span> {universityNameError}
@@ -104,10 +108,17 @@ export default function UniversityPage() {
               id="universityName"
               name="universityName"
               type="text"
+              autoComplete="off"
+              list="university-list"
               value={universityName}
               onChange={(e) => setUniversityName(e.target.value)}
-              aria-describedby={universityNameError ? "universityName-error" : undefined}
+              aria-describedby={`universityName-hint${universityNameError ? " universityName-error" : ""}`}
             />
+            <datalist id="university-list">
+              {UK_UNIVERSITIES.map((uni) => (
+                <option key={uni} value={uni} />
+              ))}
+            </datalist>
           </div>
 
           {/* Course name */}
