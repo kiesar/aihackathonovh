@@ -1131,7 +1131,7 @@
   {
     "case_id": "DSA-2026-00010",
     "case_type": "dsa_application",
-    "status": "evidence_requested",
+    "status": "evidence_received",
     "applicant": {
       "name": "X Core",
       "forenames": "X",
@@ -1150,7 +1150,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-04-21T09:48:37.214Z",
-    "last_updated": "2026-05-23T19:36:28.004Z",
+    "last_updated": "2026-06-01T17:03:35.126Z",
     "timeline": [
       {
         "date": "2026-04-21T09:48:37.214Z",
@@ -1199,6 +1199,21 @@
         "event": "evidence_requested",
         "note": "further evidence requested to assess eligibility",
         "actor": "jsmith"
+      },
+      {
+        "date": "2026-06-01T14:41:42.191Z",
+        "event": "state_transition",
+        "note": "Applicant viewed evidence request — status updated to Awaiting evidence."
+      },
+      {
+        "date": "2026-06-01T17:03:35.126Z",
+        "event": "evidence_received",
+        "note": "Evidence uploaded by applicant: council tax. Files: Council tax.pdf"
+      },
+      {
+        "date": "2026-06-01T17:03:35.126Z",
+        "event": "notification_sent",
+        "note": "Applicant granted evidence access consent to: Student Finance England, NHS Continuing Healthcare"
       }
     ],
     "case_notes": "",
@@ -1426,6 +1441,98 @@
             "label": "Account number",
             "value": "06410892",
             "confidence": "high"
+          }
+        ]
+      },
+      {
+        "submitted_at": "2026-06-01T17:03:35.126Z",
+        "description": "council tax",
+        "files": [
+          {
+            "name": "Council tax.pdf",
+            "size": 21031,
+            "type": "application/pdf"
+          }
+        ],
+        "extracted_fields": [
+          {
+            "key": "document_type",
+            "label": "Document type",
+            "value": "Council tax",
+            "confidence": "high"
+          },
+          {
+            "key": "document_date",
+            "label": "Document date",
+            "value": "10/03/2025",
+            "confidence": "high"
+          },
+          {
+            "key": "issuing_body",
+            "label": "Issuing organisation",
+            "value": "Glasgow City Council",
+            "confidence": "high"
+          },
+          {
+            "key": "person_name",
+            "label": "Name on document",
+            "value": "Emma Roberts",
+            "confidence": "high"
+          },
+          {
+            "key": "address_line1",
+            "label": "Address line 1",
+            "value": "100 Place Avenue",
+            "confidence": "high"
+          },
+          {
+            "key": "postcode",
+            "label": "Postcode",
+            "value": "NW2 7EB",
+            "confidence": "high"
+          },
+          {
+            "key": "amount",
+            "label": "Amount (£)",
+            "value": "£3200",
+            "confidence": "high"
+          },
+          {
+            "key": "vat",
+            "label": "VAT",
+            "value": "£2000",
+            "confidence": "medium"
+          },
+          {
+            "key": "total",
+            "label": "Total (inc. VAT)",
+            "value": "£3200",
+            "confidence": "high"
+          }
+        ],
+        "consent_grants": [
+          {
+            "alb_id": "sfe",
+            "alb_name": "Student Finance England",
+            "granted_at": "2026-06-01T17:03:35.126Z",
+            "expires_at": "2026-08-30T17:03:35.127Z",
+            "evidence_types": [
+              "diagnostic",
+              "address",
+              "bank",
+              "invoice",
+              "quote"
+            ]
+          },
+          {
+            "alb_id": "nhs_continuing_care",
+            "alb_name": "NHS Continuing Healthcare",
+            "granted_at": "2026-06-01T17:03:35.126Z",
+            "expires_at": "2026-08-30T17:03:35.127Z",
+            "evidence_types": [
+              "diagnostic",
+              "address"
+            ]
           }
         ]
       }

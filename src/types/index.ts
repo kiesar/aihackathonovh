@@ -146,6 +146,27 @@ export interface EvidenceSubmission {
   description: string;
   files: Array<{ name: string; size: number; type: string }>;
   extracted_fields: ExtractedEvidenceField[];
+  consent_grants?: ConsentGrant[];
+}
+
+// ── ALB Consent ──────────────────────────────────────────────
+
+export interface GovernmentALB {
+  alb_id: string;
+  name: string;
+  abbreviation: string;
+  description: string;
+  evidence_types: string[];   // e.g. ["diagnostic", "bank", "address"]
+  website: string;
+}
+
+export interface ConsentGrant {
+  alb_id: string;
+  alb_name: string;
+  granted_at: string;
+  expires_at: string;         // ISO date
+  evidence_types: string[];   // what evidence types they can access
+  revoked_at?: string;
 }
 
 // ── Correspondence ──────────────────────────────────────────

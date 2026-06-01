@@ -1,12 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readCases, writeCases } from "@/lib/data-store";
-import type { EvidenceSubmission } from "@/types";
+import type { EvidenceSubmission, ConsentGrant } from "@/types";
 
 interface EvidencePayload {
   caseReference: string;
   description: string;
   files: Array<{ name: string; size: number; type: string }>;
   extractedFields?: Array<{ key: string; label: string; value: string; confidence: string }>;
+  consentGrants?: Array<{
+    alb_id: string;
+    alb_name: string;
+    evidence_types: string[];
+    consent_duration_days: number;
+  }>;
 }
 
 // Validate case reference format
@@ -24,7 +30,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const { caseReference, description, files, extractedFields } = body;
+    const { caseReference, description, files, extractedFields, consentGrants } = body;
 
     if (!caseReference) {
       return NextResponse.json(
@@ -94,13 +100,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // Build evidence submission record
     const now = new Date().toISOString();
-    // Sanitize file names — strip path separators
     const fileNames = files
       .map((f) => (f.name || "unknown").replace(/[/\\]/g, "_"))
       .join(", ");
 
-    // Build evidence submission record
+    // Build consent grants if provided
+    const grants: ConsentGrant[] = (consentGrants || []).map((g) => {
+      const expiresAt = new Date();
+      expiresAt.setDate(expiresAt.getDate() + g.consent_duration_days);
+      return {
+        alb_id: g.alb_id,
+        alb_name: g.alb_name,
+        granted_at: now,
+        expires_at: expiresAt.toISOString(),
+        evidence_types: g.evidence_types,
+      };
+    });
+
     const submission: EvidenceSubmission = {
       submitted_at: now,
       description: description.trim(),
@@ -115,6 +133,7 @@ export async function POST(request: NextRequest) {
         value: field.value,
         confidence: field.confidence as "high" | "medium" | "low",
       })),
+      consent_grants: grants.length > 0 ? grants : undefined,
     };
 
     // Update case: transition to evidence_received, add timeline entry, store submission
@@ -125,6 +144,15 @@ export async function POST(request: NextRequest) {
       event: "evidence_received",
       note: `Evidence uploaded by applicant: ${description.trim().slice(0, 500)}. Files: ${fileNames.slice(0, 500)}`,
     });
+
+    // Add consent grant timeline entries
+    if (grants.length > 0) {
+      caseRecord.timeline.push({
+        date: now,
+        event: "notification_sent",
+        note: `Applicant granted evidence access consent to: ${grants.map((g) => g.alb_name).join(", ")}`,
+      });
+    }
 
     // Append to evidence_submissions array
     if (!caseRecord.evidence_submissions) {

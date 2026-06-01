@@ -9,6 +9,7 @@ import type {
   WorkflowStateName,
   AISummaryResponse,
   EvidenceSubmission,
+  ConsentGrant,
 } from "@/types";
 
 interface CaseDetailResponse {
@@ -621,6 +622,37 @@ export default function CaseDetailPage() {
                               </div>
                             ))}
                           </dl>
+                        </>
+                      )}
+
+                      {/* Consent grants */}
+                      {submission.consent_grants && submission.consent_grants.length > 0 && (
+                        <>
+                          <h3 className="govuk-heading-s" style={{ marginBottom: "8px", marginTop: "12px" }}>
+                            Evidence sharing consents
+                          </h3>
+                          {submission.consent_grants.map((grant) => {
+                            const expired = new Date(grant.expires_at) < new Date();
+                            const revoked = !!grant.revoked_at;
+                            return (
+                              <div key={grant.alb_id} style={{ marginBottom: "8px", padding: "8px", background: "#f3f2f1", borderRadius: "4px" }}>
+                                <p className="govuk-body-s" style={{ marginBottom: "2px", fontWeight: "bold" }}>
+                                  {grant.alb_name}
+                                  {" "}
+                                  {revoked ? (
+                                    <strong className="govuk-tag govuk-tag--red" style={{ fontSize: "11px" }}>Revoked</strong>
+                                  ) : expired ? (
+                                    <strong className="govuk-tag govuk-tag--grey" style={{ fontSize: "11px" }}>Expired</strong>
+                                  ) : (
+                                    <strong className="govuk-tag govuk-tag--green" style={{ fontSize: "11px" }}>Active</strong>
+                                  )}
+                                </p>
+                                <p className="govuk-hint" style={{ fontSize: "12px", marginBottom: 0 }}>
+                                  Granted: {formatDate(grant.granted_at)} · Expires: {formatDate(grant.expires_at)}
+                                </p>
+                              </div>
+                            );
+                          })}
                         </>
                       )}
                     </div>

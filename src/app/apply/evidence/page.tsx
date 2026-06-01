@@ -21,7 +21,35 @@ interface ExtractedField {
   required: boolean;
 }
 
-type Step = "upload" | "review" | "success";
+type Step = "upload" | "review" | "consent" | "success";
+
+// ── ALB types ────────────────────────────────────────────────
+
+interface ALBSuggestion {
+  alb_id: string;
+  name: string;
+  abbreviation: string;
+  description: string;
+  evidence_types: string[];
+  website: string;
+  matchScore: number;
+  matchedTypes: string[];
+}
+
+interface ConsentSelection {
+  alb_id: string;
+  alb_name: string;
+  evidence_types: string[];
+  consent_duration_days: number;
+  selected: boolean;
+}
+
+const CONSENT_DURATION_OPTIONS = [
+  { value: 30,  label: "30 days" },
+  { value: 90,  label: "3 months" },
+  { value: 180, label: "6 months" },
+  { value: 365, label: "1 year" },
+];
 
 // ── Expected field templates per document type ───────────────
 // These define what information is REQUIRED from each evidence type.
@@ -196,6 +224,12 @@ function EvidenceContent() {
   const [submitting, setSubmitting] = useState(false);
   const reviewErrorRef = useRef<HTMLDivElement>(null);
 
+  // Step 3 — ALB consent
+  const [albSuggestions, setAlbSuggestions] = useState<ALBSuggestion[]>([]);
+  const [consentSelections, setConsentSelections] = useState<ConsentSelection[]>([]);
+  const [albLoading, setAlbLoading] = useState(false);
+  const [consentSubmitting, setConsentSubmitting] = useState(false);
+
   // ── File selection ──────────────────────────────────────
 
   const handleFileChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
@@ -314,7 +348,7 @@ function EvidenceContent() {
     }
   }
 
-  // ── Step 2 → submit ─────────────────────────────────────
+  // ── Step 2 → Step 3: proceed to consent ────────────────
 
   function handleFieldChange(key: string, value: string) {
     setExtractedFields((prev) =>
@@ -322,10 +356,9 @@ function EvidenceContent() {
     );
   }
 
-  async function handleSubmit() {
+  async function handleProceedToConsent() {
     const errors: string[] = [];
 
-    // Check all required fields have a value
     const missingRequired = extractedFields.filter(
       (f) => f.required && (!f.value || f.value.trim().length === 0)
     );
@@ -335,7 +368,6 @@ function EvidenceContent() {
       );
     }
 
-    // Warn about low-confidence fields still showing placeholder text
     const unverified = extractedFields.filter(
       (f) => f.confidence === "low" && f.value.toLowerCase().includes("unable to extract")
     );
@@ -352,7 +384,53 @@ function EvidenceContent() {
     }
 
     setReviewErrors([]);
-    setSubmitting(true);
+    setAlbLoading(true);
+
+    // Fetch ALB suggestions based on document type
+    try {
+      const detectedDocType = extractedFields.find(f => f.key === "document_type")?.value ?? "";
+      const res = await fetch("/api/cases/evidence/alb-suggestions", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ description: description.trim(), extractedDocType: detectedDocType }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        const suggestions: ALBSuggestion[] = data.suggestions || [];
+        setAlbSuggestions(suggestions);
+        setConsentSelections(
+          suggestions.map((alb) => ({
+            alb_id: alb.alb_id,
+            alb_name: alb.name,
+            evidence_types: alb.evidence_types,
+            consent_duration_days: 90,
+            selected: false,
+          }))
+        );
+      }
+    } catch {
+      // Non-fatal — proceed to consent step with empty suggestions
+      setAlbSuggestions([]);
+      setConsentSelections([]);
+    } finally {
+      setAlbLoading(false);
+      setStep("consent");
+    }
+  }
+
+  // ── Step 3 → submit ──────────────────────────────────────
+
+  async function handleConsentSubmit() {
+    setConsentSubmitting(true);
+
+    const selectedGrants = consentSelections
+      .filter((c) => c.selected)
+      .map((c) => ({
+        alb_id: c.alb_id,
+        alb_name: c.alb_name,
+        evidence_types: c.evidence_types,
+        consent_duration_days: c.consent_duration_days,
+      }));
 
     try {
       const res = await fetch("/api/cases/evidence", {
@@ -363,24 +441,29 @@ function EvidenceContent() {
           description: description.trim(),
           files: files.map((f) => ({ name: f.name, size: f.size, type: f.type })),
           extractedFields,
+          consentGrants: selectedGrants,
         }),
       });
 
       if (res.ok) {
-        // Revoke all object URLs
         files.forEach((f) => { if (f.previewUrl) URL.revokeObjectURL(f.previewUrl); });
         setStep("success");
       } else {
         const data = await res.json();
         setReviewErrors([data.error || "Failed to submit evidence. Please try again."]);
-        setTimeout(() => reviewErrorRef.current?.focus(), 0);
+        setStep("review");
       }
     } catch {
       setReviewErrors(["Sorry, there is a problem with the service. Try again later."]);
-      setTimeout(() => reviewErrorRef.current?.focus(), 0);
+      setStep("review");
     } finally {
-      setSubmitting(false);
+      setConsentSubmitting(false);
     }
+  }
+
+  // Keep old handleSubmit as alias for back-compat
+  async function handleSubmit() {
+    return handleProceedToConsent();
   }
 
   // ── No case reference ───────────────────────────────────
@@ -395,6 +478,173 @@ function EvidenceContent() {
             <a href="/apply/status" className="govuk-link">check your application status</a>{" "}
             first, then use the upload evidence link.
           </p>
+        </main>
+      </div>
+    );
+  }
+
+  // ── Step 3: ALB consent ─────────────────────────────────
+
+  if (step === "consent") {
+    const selectedCount = consentSelections.filter((c) => c.selected).length;
+
+    return (
+      <div className="govuk-width-container">
+        <main className="govuk-main-wrapper" id="main-content" role="main">
+          <p className="govuk-body govuk-hint">Step 3 of 3</p>
+          <h1 className="govuk-heading-l">Share your evidence with other services</h1>
+
+          {/* AI summary banner */}
+          <div className="govuk-inset-text" style={{ borderLeftColor: "#003078" }}>
+            <p className="govuk-body">
+              <strong className="govuk-tag govuk-tag--purple">AI suggestion</strong>{" "}
+              Based on the evidence you have uploaded, the following UK government services
+              may also need similar documents. You can give them permission to access your
+              evidence for a set period — saving you from uploading it again.
+            </p>
+            <p className="govuk-body govuk-hint" style={{ marginBottom: 0 }}>
+              This is optional. You can skip this step and submit without granting any access.
+            </p>
+          </div>
+
+          {albSuggestions.length === 0 ? (
+            <p className="govuk-body govuk-hint">No relevant services found for this evidence type.</p>
+          ) : (
+            <>
+              <p className="govuk-body">
+                Select the services you would like to share your evidence with and choose how long they can access it.
+              </p>
+
+              {consentSelections.map((selection, idx) => {
+                const alb = albSuggestions.find((a) => a.alb_id === selection.alb_id);
+                if (!alb) return null;
+                return (
+                  <div
+                    key={selection.alb_id}
+                    style={{
+                      border: selection.selected ? "2px solid #003078" : "1px solid #b1b4b6",
+                      borderRadius: "4px",
+                      padding: "16px",
+                      marginBottom: "16px",
+                      background: selection.selected ? "#f0f4fa" : "#ffffff",
+                    }}
+                  >
+                    <div className="govuk-checkboxes__item" style={{ marginBottom: "8px" }}>
+                      <input
+                        className="govuk-checkboxes__input"
+                        id={`alb-${alb.alb_id}`}
+                        type="checkbox"
+                        checked={selection.selected}
+                        onChange={(e) => {
+                          setConsentSelections((prev) =>
+                            prev.map((c, i) => i === idx ? { ...c, selected: e.target.checked } : c)
+                          );
+                        }}
+                      />
+                      <label className="govuk-label govuk-checkboxes__label" htmlFor={`alb-${alb.alb_id}`}>
+                        <strong>{alb.name}</strong>{" "}
+                        <strong className="govuk-tag govuk-tag--grey" style={{ fontSize: "11px" }}>
+                          {alb.abbreviation}
+                        </strong>
+                      </label>
+                    </div>
+
+                    <p className="govuk-body govuk-hint" style={{ marginLeft: "40px", marginBottom: "8px" }}>
+                      {alb.description}
+                    </p>
+
+                    <p className="govuk-body govuk-hint" style={{ marginLeft: "40px", marginBottom: "8px", fontSize: "12px" }}>
+                      Typically requires:{" "}
+                      {alb.matchedTypes.map((t) => (
+                        <strong key={t} className="govuk-tag govuk-tag--blue" style={{ fontSize: "11px", marginRight: "4px" }}>
+                          {t}
+                        </strong>
+                      ))}
+                    </p>
+
+                    {selection.selected && (
+                      <div className="govuk-form-group" style={{ marginLeft: "40px", marginBottom: 0 }}>
+                        <label className="govuk-label" htmlFor={`duration-${alb.alb_id}`}>
+                          Allow access for
+                        </label>
+                        <select
+                          className="govuk-select"
+                          id={`duration-${alb.alb_id}`}
+                          value={selection.consent_duration_days}
+                          onChange={(e) => {
+                            setConsentSelections((prev) =>
+                              prev.map((c, i) =>
+                                i === idx ? { ...c, consent_duration_days: parseInt(e.target.value, 10) } : c
+                              )
+                            );
+                          }}
+                        >
+                          {CONSENT_DURATION_OPTIONS.map((opt) => (
+                            <option key={opt.value} value={opt.value}>{opt.label}</option>
+                          ))}
+                        </select>
+                        <div className="govuk-hint" style={{ fontSize: "12px", marginTop: "4px" }}>
+                          Access will expire on{" "}
+                          <strong>
+                            {new Date(
+                              Date.now() + selection.consent_duration_days * 24 * 60 * 60 * 1000
+                            ).toLocaleDateString("en-GB", { day: "numeric", month: "long", year: "numeric" })}
+                          </strong>
+                          . You can withdraw consent at any time.
+                        </div>
+                      </div>
+                    )}
+
+                    <p style={{ marginLeft: "40px", marginTop: "8px", marginBottom: 0 }}>
+                      <a
+                        href={alb.website}
+                        className="govuk-link govuk-link--no-visited-state"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{ fontSize: "13px" }}
+                      >
+                        Learn more about {alb.abbreviation} ↗
+                      </a>
+                    </p>
+                  </div>
+                );
+              })}
+            </>
+          )}
+
+          {/* Legal notice */}
+          <div className="govuk-warning-text" style={{ marginTop: "16px" }}>
+            <span className="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong className="govuk-warning-text__text">
+              <span className="govuk-visually-hidden">Important</span>
+              By granting access, you consent to the selected services accessing your uploaded evidence
+              for the specified period. This is governed by the UK GDPR and Data Protection Act 2018.
+              You can withdraw consent at any time by contacting Student Finance England.
+            </strong>
+          </div>
+
+          <div style={{ display: "flex", gap: "12px", flexWrap: "wrap", marginTop: "24px" }}>
+            <button
+              type="button"
+              className="govuk-button"
+              disabled={consentSubmitting}
+              onClick={handleConsentSubmit}
+            >
+              {consentSubmitting
+                ? "Submitting…"
+                : selectedCount > 0
+                ? `Submit evidence and grant access to ${selectedCount} service${selectedCount !== 1 ? "s" : ""}`
+                : "Submit evidence without sharing"}
+            </button>
+            <button
+              type="button"
+              className="govuk-button govuk-button--secondary"
+              disabled={consentSubmitting}
+              onClick={() => setStep("review")}
+            >
+              Back
+            </button>
+          </div>
         </main>
       </div>
     );
@@ -417,6 +667,13 @@ function EvidenceContent() {
             Your evidence and the extracted information have been submitted and attached to your case.
             A caseworker will review them as part of your application.
           </p>
+          {consentSelections.filter((c) => c.selected).length > 0 && (
+            <p className="govuk-body">
+              You have also granted evidence access to{" "}
+              <strong>{consentSelections.filter((c) => c.selected).map((c) => c.alb_name).join(", ")}</strong>.
+              You can withdraw this consent at any time by contacting Student Finance England.
+            </p>
+          )}
           <p className="govuk-body">
             You can <a href="/apply/status" className="govuk-link">check the status of your application</a> at any time.
           </p>
@@ -433,7 +690,7 @@ function EvidenceContent() {
         <main className="govuk-main-wrapper" id="main-content" role="main">
 
           {/* Progress indicator */}
-          <p className="govuk-body govuk-hint">Step 2 of 2</p>
+          <p className="govuk-body govuk-hint">Step 2 of 3</p>
           <h1 className="govuk-heading-l">Review extracted information</h1>
 
           {/* AI label */}
@@ -600,15 +857,15 @@ function EvidenceContent() {
                 <button
                   type="button"
                   className="govuk-button"
-                  disabled={submitting}
-                  onClick={handleSubmit}
+                  disabled={submitting || albLoading}
+                  onClick={handleProceedToConsent}
                 >
-                  {submitting ? "Submitting…" : "Confirm and submit"}
+                  {albLoading ? "Loading suggestions…" : "Continue"}
                 </button>
                 <button
                   type="button"
                   className="govuk-button govuk-button--secondary"
-                  disabled={submitting}
+                  disabled={submitting || albLoading}
                   onClick={() => setStep("upload")}
                 >
                   Back to upload
@@ -630,7 +887,7 @@ function EvidenceContent() {
       </a>
       <main className="govuk-main-wrapper" id="main-content" role="main">
 
-        <p className="govuk-body govuk-hint">Step 1 of 2</p>
+        <p className="govuk-body govuk-hint">Step 1 of 3</p>
         <h1 className="govuk-heading-l">Upload evidence</h1>
         <p className="govuk-body">
           Case reference: <strong>{caseReference}</strong>
