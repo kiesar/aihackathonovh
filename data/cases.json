@@ -539,7 +539,8 @@
         "sent_via": "email",
         "sent_to": "fouad.2014.ece.@gmail.com",
         "triggered_by": "automatic",
-        "trigger_rule": "awaiting_evidence_2d"
+        "trigger_rule": "awaiting_evidence_2d",
+        "read_at": "2026-06-08T08:38:23.889Z"
       }
     ]
   },
