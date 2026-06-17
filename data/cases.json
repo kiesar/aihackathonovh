@@ -1019,7 +1019,7 @@
   {
     "case_id": "DSA-2026-00009",
     "case_type": "dsa_application",
-    "status": "evidence_requested",
+    "status": "awaiting_evidence",
     "applicant": {
       "name": "S Samaa",
       "forenames": "S",
@@ -1038,7 +1038,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-04-20T08:05:24.826Z",
-    "last_updated": "2026-06-17T09:28:47.071Z",
+    "last_updated": "2026-06-17T15:31:25.252Z",
     "timeline": [
       {
         "date": "2026-04-20T08:05:24.826Z",
@@ -1055,6 +1055,11 @@
         "event": "evidence_requested",
         "note": "please send us the invoices",
         "actor": "jsmith"
+      },
+      {
+        "date": "2026-06-17T15:31:25.252Z",
+        "event": "state_transition",
+        "note": "Applicant viewed evidence request — status updated to Awaiting evidence."
       }
     ],
     "case_notes": "",
