@@ -1150,7 +1150,7 @@
   {
     "case_id": "DSA-2026-00010",
     "case_type": "dsa_application",
-    "status": "evidence_received",
+    "status": "under_review",
     "applicant": {
       "name": "X Core",
       "forenames": "X",
@@ -1169,7 +1169,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-04-21T09:48:37.214Z",
-    "last_updated": "2026-06-01T17:03:35.126Z",
+    "last_updated": "2026-06-17T15:56:57.640Z",
     "timeline": [
       {
         "date": "2026-04-21T09:48:37.214Z",
@@ -1233,6 +1233,12 @@
         "date": "2026-06-01T17:03:35.126Z",
         "event": "notification_sent",
         "note": "Applicant granted evidence access consent to: Student Finance England, NHS Continuing Healthcare"
+      },
+      {
+        "date": "2026-06-17T15:56:57.640Z",
+        "event": "state_transition",
+        "note": "review submitted evidence",
+        "actor": "jsmith"
       }
     ],
     "case_notes": "",
@@ -1693,7 +1699,7 @@
   {
     "case_id": "DSA-2026-00012",
     "case_type": "dsa_application",
-    "status": "evidence_received",
+    "status": "under_review",
     "applicant": {
       "name": "Joe Something",
       "forenames": "Joe",
@@ -1712,7 +1718,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-05-18T13:18:42.606Z",
-    "last_updated": "2026-05-18T13:26:55.062Z",
+    "last_updated": "2026-06-17T15:56:22.152Z",
     "timeline": [
       {
         "date": "2026-05-18T13:18:42.606Z",
@@ -1745,6 +1751,12 @@
         "date": "2026-05-18T13:26:55.062Z",
         "event": "evidence_received",
         "note": "Evidence uploaded by applicant: invoice. Files: invoice_MF20259633.pdf"
+      },
+      {
+        "date": "2026-06-17T15:56:22.152Z",
+        "event": "state_transition",
+        "note": "review evidences",
+        "actor": "jsmith"
       }
     ],
     "case_notes": "",
