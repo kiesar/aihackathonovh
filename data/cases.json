@@ -927,7 +927,7 @@
   {
     "case_id": "DSA-2026-00008",
     "case_type": "dsa_application",
-    "status": "under_review",
+    "status": "awaiting_assessment",
     "applicant": {
       "name": "S Sierra",
       "forenames": "S",
@@ -946,7 +946,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-04-16T15:14:13.048Z",
-    "last_updated": "2026-06-01T14:00:39.643Z",
+    "last_updated": "2026-06-17T09:28:02.777Z",
     "timeline": [
       {
         "date": "2026-04-16T15:14:13.048Z",
@@ -968,6 +968,12 @@
         "date": "2026-06-01T14:00:39.643Z",
         "event": "notification_sent",
         "note": "Automated letter sent: Update on your DSA application DSA-2026-00008"
+      },
+      {
+        "date": "2026-06-17T09:28:02.777Z",
+        "event": "state_transition",
+        "note": "Please assess the case with the evidences received",
+        "actor": "jsmith"
       }
     ],
     "case_notes": "",
@@ -1013,7 +1019,7 @@
   {
     "case_id": "DSA-2026-00009",
     "case_type": "dsa_application",
-    "status": "evidence_received",
+    "status": "evidence_requested",
     "applicant": {
       "name": "S Samaa",
       "forenames": "S",
@@ -1032,7 +1038,7 @@
     },
     "assigned_to": "jsmith",
     "created_date": "2026-04-20T08:05:24.826Z",
-    "last_updated": "2026-04-21T09:40:21.219Z",
+    "last_updated": "2026-06-17T09:28:47.071Z",
     "timeline": [
       {
         "date": "2026-04-20T08:05:24.826Z",
@@ -1043,6 +1049,12 @@
         "date": "2026-04-21T09:40:21.219Z",
         "event": "evidence_received",
         "note": "Evidence uploaded by applicant: proof of address. Files: Council tax.pdf"
+      },
+      {
+        "date": "2026-06-17T09:28:47.071Z",
+        "event": "evidence_requested",
+        "note": "please send us the invoices",
+        "actor": "jsmith"
       }
     ],
     "case_notes": "",
@@ -1127,7 +1139,8 @@
           }
         ]
       }
-    ]
+    ],
+    "evidence_requested_date": "2026-06-17T09:28:47.071Z"
   },
   {
     "case_id": "DSA-2026-00010",

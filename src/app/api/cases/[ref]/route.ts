@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { readCases, writeCases } from "@/lib/data-store";
-import type { WorkflowStateName } from "@/types";
+import type { WorkflowStateName, EvidenceSubmission, ConsentGrant } from "@/types";
 
 const DISPLAY_STATUS: Record<WorkflowStateName, string> = {
   awaiting_evidence: "Awaiting evidence",
@@ -64,6 +64,12 @@ export async function GET(
       lastUpdated: string;
       decisionReason?: string;
       outboundLetters?: Array<{ letter_id: string; subject: string; generated_at: string; type: string; read_at?: string }>;
+      evidenceSubmissions?: Array<{
+        submitted_at: string;
+        description: string;
+        files: Array<{ name: string; size: number; type: string }>;
+        consent_grants?: ConsentGrant[];
+      }>;
     } = {
       status: found.status,
       displayStatus: DISPLAY_STATUS[found.status] ?? found.status,
@@ -87,6 +93,18 @@ export async function GET(
           generated_at: l.generated_at,
           type: l.type,
           read_at: l.read_at,
+        }));
+    }
+
+    // Include evidence submissions with consent grants (newest first)
+    if (found.evidence_submissions && found.evidence_submissions.length > 0) {
+      response.evidenceSubmissions = [...found.evidence_submissions]
+        .sort((a, b) => new Date(b.submitted_at).getTime() - new Date(a.submitted_at).getTime())
+        .map((s: EvidenceSubmission) => ({
+          submitted_at: s.submitted_at,
+          description: s.description,
+          files: s.files,
+          consent_grants: s.consent_grants,
         }));
     }
 
